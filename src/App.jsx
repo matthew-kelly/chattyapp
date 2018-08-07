@@ -32,10 +32,10 @@ class App extends Component {
     const username = event.target.elements.chatbarUsername.value;
     let content = event.target.elements.chatbarMessage.value;
 
-    if (!content) {
+    if (content.trim().length < 1) {
       return;
     }
-    
+
     const id = this.generateRandomId();
 
     const newMessage = {
