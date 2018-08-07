@@ -3,12 +3,10 @@ import React, { Component } from 'react';
 class Message extends Component {
   render() {
     return (
-      <main className="messages">
         <div className="message">
           <span className="message-username">Test</span>
           <span className="message-content">Test</span>
         </div>
-      </main>
     )
   };
 }
