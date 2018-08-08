@@ -3,12 +3,13 @@ import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
 import { IncomingMessage } from 'http';
 
-const ws = new WebSocket(`ws://localhost:3001`);
+// const ws = new WebSocket(`ws://localhost:3001`);
 
 class App extends Component {
 
   constructor(props) {
     super(props);
+    this.socket = new WebSocket(`ws://localhost:3001`);
     this.state = {
       currentUser: { name: "Bob" },
       messages: [] // messages coming from the server will be stored here as they arrive
@@ -64,16 +65,16 @@ class App extends Component {
       content
     };
 
-    ws.send(JSON.stringify(newMessage));
+    this.socket.send(JSON.stringify(newMessage));
     event.target.elements.chatbarMessage.value = "";
   }
 
   componentDidMount() {
     console.log("componentDidMount <App />");
 
-    ws.addEventListener('open', this.onConnectionToServer);
+    this.socket.addEventListener('open', this.onConnectionToServer);
 
-    ws.addEventListener('message', this.IncomingMessage);
+    this.socket.addEventListener('message', this.IncomingMessage);
   }
 
   render() {
