@@ -17,8 +17,6 @@ class App extends Component {
   // Client connects to server
   onConnectionToServer = (event) => {
     console.log("Connected to server");
-    const messages = this.state.messages;
-    this.setState({ messages }); // update messages state with running message list from server
   }
 
   // Message is received from server
