@@ -3,8 +3,6 @@ import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
 import { IncomingMessage } from 'http';
 
-// const ws = new WebSocket(`ws://localhost:3001`);
-
 class App extends Component {
 
   constructor(props) {
@@ -16,41 +14,21 @@ class App extends Component {
     };
   }
 
+  // Client connects to server
   onConnectionToServer = (event) => {
     console.log("Connected to server");
     const messages = this.state.messages;
-    this.setState({ messages });
+    this.setState({ messages }); // update messages state with running message list from server
   }
 
+  // Message is received from server
   IncomingMessage = (incomingMessage) => {
     const newMessage = JSON.parse(incomingMessage.data);
     const messages = this.state.messages.concat(newMessage);
     this.setState({ messages });
   }
 
-  // // addMessage Original Code
-  // addMessage = (event) => {
-  //   event.preventDefault();
-  //   const username = event.target.elements.chatbarUsername.value;
-  //   let content = event.target.elements.chatbarMessage.value;
-
-  //   if (content.trim().length < 1) {
-  //     return;
-  //   }
-
-  //   const id = this.generateRandomId();
-
-  //   const newMessage = {
-  //     username,
-  //     content,
-  //     id
-  //   };
-
-  //   const messages = this.state.messages.concat(newMessage);
-  //   this.setState({ messages });
-  //   event.target.elements.chatbarMessage.value = "";
-  // }
-
+  // ChatBar.jsx is submitted with new username/message
   addMessage = (event) => {
     event.preventDefault();
     const username = event.target.elements.chatbarUsername.value;
@@ -64,19 +42,22 @@ class App extends Component {
       username,
       content
     };
+    // set currentUser to be inputted username
+    this.setState({currentUser: username});
 
-    this.socket.send(JSON.stringify(newMessage));
-    event.target.elements.chatbarMessage.value = "";
+    this.socket.send(JSON.stringify(newMessage)); // send message to server
+    event.target.elements.chatbarMessage.value = ""; // clear message field
   }
 
   componentDidMount() {
     console.log("componentDidMount <App />");
 
-    this.socket.addEventListener('open', this.onConnectionToServer);
+    this.socket.addEventListener('open', this.onConnectionToServer); // connect to server
 
-    this.socket.addEventListener('message', this.IncomingMessage);
+    this.socket.addEventListener('message', this.IncomingMessage); // listen for incoming messages
   }
 
+  // render page content
   render() {
     return (
       <div>
