@@ -19,9 +19,13 @@ body {
   right: 0;
 }
 
+.chatbar .username-entry {
+  flex: 1;
+}
+
 .chatbar form {
   display: flex;
-  flex: auto;
+  flex: 3;
 }
 
 .chatbar-message,
@@ -75,8 +79,15 @@ body {
   left: 0;
   padding: 0 10px;
   position: fixed;
+  display: flex;
+  justify-content: space-between;
   right: 0;
   top: 0;
+}
+
+.navbar .user-count {
+  line-height: 60px;
+  padding: 0 10px;
 }
 
 .navbar-brand {

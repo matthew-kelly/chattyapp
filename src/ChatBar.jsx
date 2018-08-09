@@ -5,10 +5,11 @@ class ChatBar extends Component {
     const currentUser = this.props.currentUser ? this.props.currentUser : { name: "Anonymous" };
     return (
       <footer className="chatbar">
-        <form onSubmit={this.props.onSubmit}>
+        <form className="username-entry" onSubmit={this.props.changeUsername}>
           <input name="chatbarUsername" className="chatbar-username" defaultValue={currentUser.name} />
+        </form>
+        <form className="message-entry" onSubmit={this.props.addMessage}>
           <input name="chatbarMessage" className="chatbar-message" placeholder="Type a message and hit ENTER" />
-          <input style={{ display: "none" }} type="submit" />
         </form>
       </footer>
     )

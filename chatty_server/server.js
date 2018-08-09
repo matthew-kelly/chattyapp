@@ -22,11 +22,6 @@ const wss = new SocketServer({
 let allMessages = [];
 
 function broadcastMessage(message) {
-  // for (let client of wss.clients) {
-  //   if (client.readyState === ws.OPEN) {
-  //     client.send(message);
-  //   }
-  // }
   for (let client of wss.clients) {
     client.send(message);
   }
@@ -34,19 +29,47 @@ function broadcastMessage(message) {
 
 function handleMessage(messageObj) {
   let messageParsed = JSON.parse(messageObj);
+
+  if (messageParsed.type === "postNotification") {
+    messageParsed.type = "incomingNotification";
+  } else {
+    messageParsed.type = "incomingMessage";
+  }
   messageParsed.id = uuidv4();
   allMessages.push(messageParsed);
   broadcastMessage(JSON.stringify(messageParsed));
 }
 
+function disconnect(client) {
+  console.log('Client disconnected');
+  const currentUserCount = {
+    type: "userCount",
+    userCount: wss.clients.size
+  };
+  for (let client of wss.clients) {
+    client.send(JSON.stringify(currentUserCount));
+  }
+}
+
 function handleConnection(client) {
   console.log('Client connected');
+  // Send current user count to all users
+  const currentUserCount = {
+    type: "userCount",
+    userCount: wss.clients.size
+  };
+  for (let client of wss.clients) {
+    client.send(JSON.stringify(currentUserCount));
+  }
+  // Populate with old messages (if there are any)
+  if (allMessages.length > 0) {
+    client.send(JSON.stringify(allMessages));
+  }
 
-  client.send(JSON.stringify(allMessages));
+  // Check for messages
   client.on('message', handleMessage);
-
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  client.on('close', () => console.log('Client disconnected'));
+  client.on('close', disconnect);
 }
 
 // Set up a callback that will run when a client connects to the server

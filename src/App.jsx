@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import NavBar from './NavBar.jsx';
 import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
 import { IncomingMessage } from 'http';
@@ -10,7 +11,8 @@ class App extends Component {
     this.socket = new WebSocket(`ws://localhost:3001`);
     this.state = {
       currentUser: { name: "Bob" },
-      messages: [] // messages coming from the server will be stored here as they arrive
+      messages: [], // messages coming from the server will be stored here as they arrive
+      userCount: 0
     };
   }
 
@@ -22,14 +24,38 @@ class App extends Component {
   // Message is received from server
   IncomingMessage = (incomingMessage) => {
     const newMessage = JSON.parse(incomingMessage.data);
-    const messages = this.state.messages.concat(newMessage);
-    this.setState({ messages });
+    if (newMessage.type === "userCount") { // userCount
+      const userCount = newMessage.userCount;
+      this.setState({ userCount });
+    } else { // Messages and notifications
+      const messages = this.state.messages.concat(newMessage);
+      this.setState({ messages });
+    }
+  }
+
+  // Change currentUser.name to be entered username
+  changeUsername = (event) => {
+    event.preventDefault();
+    const username = event.target.elements.chatbarUsername.value;
+
+    const newUsername = {
+      type: "postNotification",
+      content: `${this.state.currentUser.name} has changed their name to ${username}`
+    };
+
+    if (!username) {
+      this.setState({ currentUser: { name: "Anonymous" } });
+    } else {
+      this.setState({ currentUser: { name: username } });
+    }
+
+    this.socket.send(JSON.stringify(newUsername)); // send username to server
   }
 
   // ChatBar.jsx is submitted with new username/message
   addMessage = (event) => {
     event.preventDefault();
-    const username = event.target.elements.chatbarUsername.value;
+    const username = this.state.currentUser.name;
     let content = event.target.elements.chatbarMessage.value;
 
     if (content.trim().length < 1) {
@@ -38,10 +64,11 @@ class App extends Component {
 
     const newMessage = {
       username,
-      content
+      content,
+      type: "postMessage"
     };
     // set currentUser to be inputted username
-    this.setState({currentUser: username});
+    this.setState({ currentUser: { name: username } });
 
     this.socket.send(JSON.stringify(newMessage)); // send message to server
     event.target.elements.chatbarMessage.value = ""; // clear message field
@@ -59,8 +86,9 @@ class App extends Component {
   render() {
     return (
       <div>
+        <NavBar userCount={this.state.userCount} />
         <MessageList messages={this.state.messages} />
-        <ChatBar onSubmit={this.addMessage} currentUser={this.state.currentUser} />
+        <ChatBar changeUsername={this.changeUsername} addMessage={this.addMessage} currentUser={this.state.currentUser} />
       </div>
     );
   }
