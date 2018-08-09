@@ -13,7 +13,7 @@ class Message extends Component {
     } else {
       return (
         <div className="message">
-          <span className="message-username">{message.username}</span>
+          <span className="message-username" style={{color: message.userColor}}>{message.username}</span>
           <span className="message-content">{message.content}</span>
         </div>
       );

@@ -20,6 +20,7 @@ const wss = new SocketServer({
 
 
 let allMessages = [];
+const colorArr = ["#4286f4", "#d84727", "#08ad29", "#8607ad"];
 
 function broadcastMessage(message) {
   for (let client of wss.clients) {
@@ -32,6 +33,7 @@ function handleMessage(messageObj) {
 
   if (messageParsed.type === "postNotification") {
     messageParsed.type = "incomingNotification";
+    messageParsed.color = colorArr[Math.floor(Math.random() * colorArr.length)];
   } else {
     messageParsed.type = "incomingMessage";
   }

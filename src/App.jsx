@@ -10,7 +10,10 @@ class App extends Component {
     super(props);
     this.socket = new WebSocket(`ws://localhost:3001`);
     this.state = {
-      currentUser: { name: "Bob" },
+      currentUser: {
+        name: "Bob",
+        color: "#000000"
+      },
       messages: [], // messages coming from the server will be stored here as they arrive
       userCount: 0
     };
@@ -28,6 +31,9 @@ class App extends Component {
       const userCount = newMessage.userCount;
       this.setState({ userCount });
     } else { // Messages and notifications
+      if (newMessage.color) {
+        this.setState({ currentUser: { color: newMessage.color, name: this.state.currentUser.name } });
+      }
       const messages = this.state.messages.concat(newMessage);
       this.setState({ messages });
     }
@@ -65,10 +71,11 @@ class App extends Component {
     const newMessage = {
       username,
       content,
-      type: "postMessage"
+      type: "postMessage",
+      userColor: this.state.currentUser.color
     };
     // set currentUser to be inputted username
-    this.setState({ currentUser: { name: username } });
+    this.setState({ currentUser: { name: username, color: this.state.currentUser.color } });
 
     this.socket.send(JSON.stringify(newMessage)); // send message to server
     event.target.elements.chatbarMessage.value = ""; // clear message field
