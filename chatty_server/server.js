@@ -19,8 +19,8 @@ const wss = new SocketServer({
 });
 
 let allMessages = [];
-// const colorArr = ["#4286f4", "#d84727", "#08ad29", "#8607ad"];
-const colorArr = ["green", "purple", "blue", "red"];
+const colorArr = ["#4286f4", "#d84727", "#08ad29", "#8607ad"];
+// const colorArr = ["green", "purple", "blue", "red"];
 const userColorArr = [];
 
 function getColorForUser(user) {
