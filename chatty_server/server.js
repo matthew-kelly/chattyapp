@@ -18,9 +18,18 @@ const wss = new SocketServer({
   server
 });
 
-
 let allMessages = [];
-const colorArr = ["#4286f4", "#d84727", "#08ad29", "#8607ad"];
+// const colorArr = ["#4286f4", "#d84727", "#08ad29", "#8607ad"];
+const colorArr = ["green", "purple", "blue", "red"];
+const userColorArr = [];
+
+function getColorForUser(user) {
+  for (let i = 0; i < userColorArr.length; i++) {
+    if (userColorArr[i].username === user) {
+      return userColorArr[i].color;
+    }
+  }
+}
 
 function broadcastMessage(message) {
   for (let client of wss.clients) {
@@ -30,12 +39,29 @@ function broadcastMessage(message) {
 
 function handleMessage(messageObj) {
   let messageParsed = JSON.parse(messageObj);
-
   if (messageParsed.type === "postNotification") {
     messageParsed.type = "incomingNotification";
     messageParsed.color = colorArr[Math.floor(Math.random() * colorArr.length)];
+    let userColorPair = {
+      username: messageParsed.username,
+      color: messageParsed.color
+    };
+    // check if user already exists in userColorArr
+    let checker = true;
+    for (let i = 0; i < userColorArr.length; i++) {
+      if (userColorArr[i].username === messageParsed.username) {
+        checker = false;
+      }
+    }
+    if (checker) {
+      userColorArr.push(userColorPair);
+    }
+  } else if (messageParsed.type === "postImage") {
+    messageParsed.type = "incomingImage";
+    messageParsed.color = getColorForUser(messageParsed.username);
   } else {
     messageParsed.type = "incomingMessage";
+    messageParsed.color = getColorForUser(messageParsed.username);
   }
   messageParsed.id = uuidv4();
   allMessages.push(messageParsed);

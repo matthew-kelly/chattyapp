@@ -12,7 +12,7 @@ class App extends Component {
     this.state = {
       currentUser: {
         name: "Bob",
-        color: "#000000"
+        color: "#4286f4" // default color
       },
       messages: [], // messages coming from the server will be stored here as they arrive
       userCount: 0
@@ -30,10 +30,13 @@ class App extends Component {
     if (newMessage.type === "userCount") { // userCount
       const userCount = newMessage.userCount;
       this.setState({ userCount });
-    } else { // Messages and notifications
+    } else if (newMessage.type === "incomingNotification") { // Notifications
       if (newMessage.color) {
         this.setState({ currentUser: { color: newMessage.color, name: this.state.currentUser.name } });
       }
+      const messages = this.state.messages.concat(newMessage);
+      this.setState({ messages });
+    } else { // Messages
       const messages = this.state.messages.concat(newMessage);
       this.setState({ messages });
     }
@@ -45,6 +48,7 @@ class App extends Component {
     const username = event.target.elements.chatbarUsername.value;
 
     const newUsername = {
+      username,
       type: "postNotification",
       content: `${this.state.currentUser.name} has changed their name to ${username}`
     };
@@ -58,24 +62,30 @@ class App extends Component {
     this.socket.send(JSON.stringify(newUsername)); // send username to server
   }
 
+  // Image url validation
+  checkURL = (url) => {
+    return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+  }
+
   // ChatBar.jsx is submitted with new username/message
   addMessage = (event) => {
     event.preventDefault();
     const username = this.state.currentUser.name;
     let content = event.target.elements.chatbarMessage.value;
-
-    if (content.trim().length < 1) {
-      return;
+    let newMessage = {
+      username,
+      content
+    };
+    if (this.checkURL(content)) {
+      newMessage.type = "postImage";
+    } else {
+      if (content.trim().length < 1) {
+        return false;
+      }
+      newMessage.type = "postMessage";
     }
 
-    const newMessage = {
-      username,
-      content,
-      type: "postMessage",
-      userColor: this.state.currentUser.color
-    };
-    // set currentUser to be inputted username
-    this.setState({ currentUser: { name: username, color: this.state.currentUser.color } });
+    this.setState({ currentUser: { name: username } }); // set currentUser to be inputted username
 
     this.socket.send(JSON.stringify(newMessage)); // send message to server
     event.target.elements.chatbarMessage.value = ""; // clear message field
