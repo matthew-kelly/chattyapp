@@ -10,10 +10,7 @@ class App extends Component {
     super(props);
     this.socket = new WebSocket(`ws://localhost:3001`);
     this.state = {
-      currentUser: {
-        name: "Bob",
-        color: "#4286f4" // default color
-      },
+      currentUser: {},
       messages: [], // messages coming from the server will be stored here as they arrive
       userCount: 0
     };

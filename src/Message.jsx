@@ -4,13 +4,13 @@ class Message extends Component {
   render() {
     const message = this.props.message;
 
-    if (message.type === "incomingNotification") {
+    if (message.type === 'incomingNotification') {
       return (
         <div className="message system">
           <span className="notification-content">{message.content}</span>
         </div>
       );
-    } else if (message.type === "incomingImage") {
+    } else if (message.type === 'incomingImage') {
       return (
         <div className="message">
           <span className="message-username" style={{color: message.color}}>{message.username}</span>
@@ -27,7 +27,7 @@ class Message extends Component {
         </div>
       );
     }
-  };
+  }
 }
 
 export default Message;

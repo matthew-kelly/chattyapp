@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class ChatBar extends Component {
   render() {
-    const currentUser = this.props.currentUser ? this.props.currentUser : { name: "Anonymous" };
+    const currentUser = this.props.currentUser ? this.props.currentUser : { name: 'Anonymous' };
     return (
       <footer className="chatbar">
         <form className="username-entry" onSubmit={this.props.changeUsername}>
