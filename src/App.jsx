@@ -10,7 +10,7 @@ class App extends Component {
     super(props);
     this.socket = new WebSocket(`ws://localhost:3001`);
     this.state = {
-      currentUser: {},
+      currentUser: { name: "Anonymous" },
       messages: [], // messages coming from the server will be stored here as they arrive
       userCount: 0
     };
@@ -19,6 +19,10 @@ class App extends Component {
   // Client connects to server
   onConnectionToServer = (event) => {
     console.log("Connected to server");
+  }
+
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
   }
 
   // Message is received from server
@@ -47,8 +51,9 @@ class App extends Component {
     const newUsername = {
       username,
       type: "postNotification",
-      content: `${this.state.currentUser.name} has changed their name to ${username}`
+      content: `${username} has joined the room.`
     };
+    // content: `${this.state.currentUser.name} has changed their name to ${username}`
 
     if (!username) {
       this.setState({ currentUser: { name: "Anonymous" } });
@@ -89,6 +94,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.scrollToBottom();
     console.log("componentDidMount <App />");
 
     this.socket.addEventListener('open', this.onConnectionToServer); // connect to server
@@ -96,12 +102,17 @@ class App extends Component {
     this.socket.addEventListener('message', this.IncomingMessage); // listen for incoming messages
   }
 
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
   // render page content
   render() {
     return (
-      <div>
+      <div className="absolute-container">
         <NavBar userCount={this.state.userCount} />
         <MessageList messages={this.state.messages} />
+        <div ref={(el) => { this.messagesEnd = el; }}></div>
         <ChatBar changeUsername={this.changeUsername} addMessage={this.addMessage} currentUser={this.state.currentUser} />
       </div>
     );

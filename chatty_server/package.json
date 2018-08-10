@@ -13,5 +13,8 @@
     "express": "4.16.3",
     "uuid": "^3.3.2",
     "ws": "6.0.0"
+  },
+  "devDependencies": {
+    "localtunnel": "^1.9.0"
   }
 }

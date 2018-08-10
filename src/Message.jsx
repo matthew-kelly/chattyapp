@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 class Message extends Component {
   render() {
     const message = this.props.message;
+    const username = message.username ? message.username : 'Anonymous';
 
     if (message.type === 'incomingNotification') {
       return (
@@ -13,7 +14,7 @@ class Message extends Component {
     } else if (message.type === 'incomingImage') {
       return (
         <div className="message">
-          <span className="message-username" style={{color: message.color}}>{message.username}</span>
+          <span className="message-username" style={{color: message.color}}>{username}</span>
           <div className="message-content">
             <img src={message.content} className="message-image" />
           </div>

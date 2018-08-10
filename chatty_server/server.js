@@ -3,6 +3,7 @@
 const express = require('express');
 const SocketServer = require('ws').Server;
 const uuidv4 = require('uuid/v4');
+const localtunnel = require('localtunnel');
 
 // Set the port to 3001
 const PORT = 3001;
@@ -19,9 +20,11 @@ const wss = new SocketServer({
 });
 
 let allMessages = [];
-// const colorArr = ["#4286f4", "#d84727", "#08ad29", "#8607ad"];
-const colorArr = ["green", "purple", "blue", "red"];
-const userColorArr = [];
+const colorArr = ["#1b9900", "#1fa59f", "#2d70ff", "#7849d1"];
+const userColorArr = [{
+  username: "Anonymous",
+  color: "black"
+}];
 
 function getColorForUser(user) {
   for (let i = 0; i < userColorArr.length; i++) {
