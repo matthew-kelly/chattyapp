@@ -1,45 +1,40 @@
-React Boilerplate
-=====================
 
-A minimal and light dev environment for ReactJS.
+# ChattyApp
 
-### Usage
+ChattyApp is a multi-user messaging client built using React with a Node and Express server backend. Users are placed in a universal chatroom with other users, choose a persistent username,  and share messages and images with the group. ChattyApp was a solo project, with collaboration along the way with @comberj.
 
-Clone the boilerplate and create your own git repo.
 
-```
-git clone git@github.com:lighthouse-labs/react-simple-boilerplate.git
-cd react-simple-boilerplate
-git remote rm origin
-git remote add origin [YOUR NEW REPOSITORY]
-# Manually update your package.json file
-```
+## Screenshots
 
-Install the dependencies and start the server.
+!["Main interface - desktop"](https://github.com/matthew-kelly/chattyapp/blob/master/docs/chatty-desktop-main.jpeg)
+!["Main interface - mobile"](https://github.com/matthew-kelly/chattyapp/blob/master/docs/chatty-mobile.jpeg)
+!["Main interface - desktop"](https://github.com/matthew-kelly/chattyapp/blob/master/docs/chatty-desktop-image.jpeg)
 
-```
-npm install
-npm start
-open http://localhost:3000
-```
+## Getting Started
 
-### Static Files
+- Install all dependencies:
 
-You can store static files like images, fonts, etc in the `build` folder.
+  `npm install`
 
-For example, if you copy a file called my_image.png into the build folder you can access it using `http://localhost:3000/build/my_image.png`.
+- Run the ChattyApp client:
 
-### Linting
+  `npm start`
 
-This boilerplate project includes React ESLint configuration.
+- Run the ChattyApp web server (in a separate terminal window):
 
-```
-npm run lint
-```
+  `cd chatty_server && npm start`
 
-### Dependencies
 
-* React
-* Webpack
-* [babel-loader](https://github.com/babel/babel-loader)
-* [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
+## Dependencies
+### ChattyApp (client)
+
+- React
+- Webpack
+- babel-loader
+- webpack-dev-server
+
+### ChattyApp (server)
+
+- "express": "4.16.3"
+- "uuid": "^3.3.2"
+- "ws": "6.0.0"
