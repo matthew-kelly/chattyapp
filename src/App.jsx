@@ -8,8 +8,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    // this.socket = new WebSocket(`ws://localhost:3001`);
-    this.socket = new WebSocket(`ws://${window.location.host}`);
+    this.socket = new WebSocket(`ws://localhost:3001`);
     this.state = {
       currentUser: { name: "Anonymous" },
       messages: [], // messages coming from the server will be stored here as they arrive
